@@ -16,10 +16,10 @@ export async function signUp(req, res){
         const SALT = 10
         const encryptedPassword = bcrypt.hashSync(password, SALT)
         await db.collection("users").insertOne({username, email, password: encryptedPassword})
-        res.sendStatus(201)
+        res.sendStatus(201) // created
     } catch (error) {
-        console.log("Error creating user.", error)
-        res.status(500).send("Error creatig user.")
+        console.log("Error creating new user.", error)
+        res.status(500).send("Error creatig new user.")
     }
 }
 
@@ -28,16 +28,35 @@ export async function signIn(req, res){
 
     try {
         const user = await db.collection("users").findOne({email})
-        if (!user) return res.senStatus(404)
+        if (!user) return res.sendStatus(404) // not found
+
         if (user && bcrypt.compareSync(password, user.password)){
             const token = uuid()
-            await db.collection("sessions").insertOne({userId:user._id, token})
-            res.send(token)
-        } else {
-            res.senStatus(404)
-        }
+            await db.collection("sessions").insertOne({token, userId:user._id})
+            res.send({token, name: user.name})
+        } 
+
+        res.senStatus(404)
+
     } catch (error) {
         console.log("Error logging in user.", error)
         res.status(500).send("Error logging in user.")
     }
 }
+
+export async function signOut(req, res) {
+    const {authorization} = req.headers
+
+    const token = authorization?.replace("Bearer", "").trim()
+    if(!token) return res.send(403) // forbidden
+    
+    try {
+      await db.collection("sessions").deleteOne({token})
+
+      res.sendStatus(200)
+
+    } catch (error) {
+      console.log("Error logging out.", error)
+      return res.status(500).send("Error logging out.")
+    }
+  }

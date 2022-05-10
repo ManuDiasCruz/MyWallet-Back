@@ -10,9 +10,9 @@ const mongoClient = new MongoClient(process.env.MONGO_URL)
 try {
   await mongoClient.connect()
   db = mongoClient.db(process.env.DATABASE)
-  console.log("MongoBD is running!")
-} catch(e) {
-  console.log("Error connecting to database!", e)
+  console.log("Mongo batabase MyWallet is running!")
+} catch(error) {
+  console.log("Error connecting to database!", error)
 }
 
 export default db;

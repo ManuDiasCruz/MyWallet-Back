@@ -20,12 +20,12 @@ export async function validateTransaction(req, res, next){
 export async function validateRegister(req, res, next){
     const userSchema = joi.object({
         username: joi.string().required(),
-        email: joi.string().email().required(),
+        email: joi.email().required(),
         password: joi.string().required(),
         repeatPassword: joi.ref('password')
     })
-    const {error} = userSchema.validate(req.body)
-    if (error) return res.sendStatus(422)
+    const {error} = userSchema.validate(req.body, {abortEarly: false})
+    if (error) return res.status(422).send(error.details.maps(detail => detail.message))
 
     next()
 }
