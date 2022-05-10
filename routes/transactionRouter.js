@@ -7,6 +7,7 @@ import {validateTransaction} from "../middlewares/schemaMiddleware.js"
 const transactionsRouter = Router()
 
 transactionsRouter.use(validateToken)
+
 transactionsRouter.post("/transactions", validateTransaction, addTransaction)
 transactionsRouter.get("/transactions", getTransactions)
 

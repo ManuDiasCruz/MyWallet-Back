@@ -4,7 +4,6 @@ export async function validateTransaction(req, res, next){
     const transactionSchema = joi.object({
         description: joi.string().required(),
         value: joi.number().required(),
-        date: joi.date().required(),
         type: joi.valid('credit', 'debt').required()
     })
 
@@ -20,13 +19,13 @@ export async function validateTransaction(req, res, next){
 export async function validateRegister(req, res, next){
     const userSchema = joi.object({
         username: joi.string().required(),
-        email: joi.email().required(),
+        email: joi.string().required(),
         password: joi.string().required(),
         repeatPassword: joi.ref('password')
     })
-    const {error} = userSchema.validate(req.body, {abortEarly: false})
-    if (error) return res.status(422).send(error.details.maps(detail => detail.message))
-
+    const {username, email, password, repeatPassword} = req.body
+    const {error} = userSchema.validate({username, email, password, repeatPassword})
+    if (error) return res.sendStatus(422) // unprocessable entity
     next()
 }
 
@@ -35,8 +34,9 @@ export async function validateUser(req, res, next){
         email: joi.string().email().required(),
         password: joi.string().required()
     })
+    const {email, password} = req.body
     const {error} = userSchema.validate({email, password})
-    if (error) return res.sendStatus(422)
+    if (error) return res.sendStatus(422) // unprocessable entity
 
     next()
 }

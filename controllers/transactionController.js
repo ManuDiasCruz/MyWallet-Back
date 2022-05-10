@@ -4,7 +4,11 @@ export async function addTransaction(req, res){
     try {
         const {user, transaction} = res.locals
         transaction.value = Number(transaction.value)
-        await db.collection("transactions").insertOne({...transaction, userId: user._id})
+        await db.collection("transactions").insertOne({
+            ...transaction, 
+            date: dayjs().format('DD/MM'),
+            userId: user._id
+        })
         res.sendStatus(201)
     } catch (error) {
         console.log("Error creating new transaction.", error)
