@@ -9,7 +9,7 @@ export async function validateTransaction(req, res, next){
 
     const transaction = req.body
     const {error} = transactionSchema.validate(transaction)
-    if (error) return res.sendStatus(422)
+    if (error) return res.sendStatus(422) // unprocessable entity
 
     res.locals.transaction = transaction
 
