@@ -17,14 +17,16 @@ export async function validateTransaction(req, res, next){
 }
 
 export async function validateRegister(req, res, next){
+    console.log("Entrei em Validate Register")
     const userSchema = joi.object({
-        username: joi.string().required(),
+        name: joi.string().required(),
         email: joi.string().required(),
         password: joi.string().required(),
         repeatPassword: joi.ref('password')
     })
-    const {username, email, password, repeatPassword} = req.body
-    const {error} = userSchema.validate({username, email, password, repeatPassword})
+    const {name, email, password, repeatPassword} = req.body
+    console.log("Schema Validate Register ", req.body)
+    const {error} = userSchema.validate({name, email, password, repeatPassword})
     if (error) return res.sendStatus(422) // unprocessable entity
     next()
 }

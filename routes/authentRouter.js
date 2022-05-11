@@ -5,7 +5,7 @@ import {validateRegister, validateUser} from "../middlewares/schemaMiddleware.js
 
 const authentRouter = Router()
 
-authentRouter.post("/sing-up", validateRegister, signUp)
+authentRouter.post("/sign-up", validateRegister, signUp)
 authentRouter.post("/sign-in", validateUser, signIn)
 authentRouter.post("/sign-out", signOut)
 
